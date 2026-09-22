@@ -4,10 +4,10 @@ from app.models.machine import Machine
 
 
 def get_all(db: Session) -> list[Machine]:
-    return db.query(Machine).all()
+    return db.query(Machine).filter(Machine.is_deleted == False).all()
 
 def get_by_id(db: Session, machine_id: int) -> Machine | None:
-    return db.query(Machine).filter(Machine.id == machine_id).first()
+    return db.query(Machine).filter(Machine.id == machine_id, Machine.is_deleted == False).first()
 
 def create(db: Session, machine: Machine) -> Machine:
     db.add(machine)
@@ -36,8 +36,8 @@ def update(db: Session, machine_id: int, payload: MachineIn) -> Machine | None:
 def delete(db: Session, machine_id: int) -> bool:
     machine = get_by_id(db, machine_id)
     if machine is None:
-        return None
+        return False
 
-    db.delete(machine)
+    machine.is_deleted = True
     db.commit()
     return True

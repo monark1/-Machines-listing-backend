@@ -14,6 +14,7 @@ def to_sales_out(s: SalesRecord) -> SalesRecordOut:
     return SalesRecordOut(
         id= s.id,
         machineId = s.machine_id,
+        machineName=s.machine.name if s.machine else "Unknown",
         region=s.region,
         quantitySold = s.quantity_sold,
         revenue = float(s.revenue),

@@ -1,5 +1,5 @@
 import enum
-from sqlalchemy import Column, Integer, String, Numeric, Enum
+from sqlalchemy import Boolean, Column, Integer, String, Numeric, Enum
 from app.db.base import Base
 
 
@@ -21,3 +21,4 @@ class Machine(Base):
     width = Column(Integer, nullable=False)
     speed = Column(Integer, nullable=False)
     print_colors = Column(Integer, nullable=False)
+    is_deleted = Column(Boolean, nullable=False, default=False)
