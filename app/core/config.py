@@ -11,7 +11,9 @@ class Settings:
     db_password = os.getenv("DB_PASSWORD", "")
     db_name = os.getenv("DB_NAME", "wh_portal")
 
-    secret_key = os.getenv("SECRET_KEY", "dev-secret-change-me")
+    secret_key = os.getenv("SECRET_KEY")
+    if not secret_key:
+        raise RuntimeError("SECRET_KEY environment variable is not set")
     algorithm = "HS256"
     access_token_expire_minutes = 15
     refresh_token_expire_days = 7

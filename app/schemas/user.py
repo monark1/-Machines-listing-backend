@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr
+from typing import Literal
 
 
 class UserRegister(BaseModel):
@@ -21,4 +22,4 @@ class UserOut(BaseModel):
 
 
 class UserStatusUpdate(BaseModel):
-    status: str
+    status: Literal["active", "inactive"]

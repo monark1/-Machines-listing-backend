@@ -55,7 +55,7 @@ def register(payload: UserRegister, db: Session = Depends(get_db)):
 
 @router.patch("/{user_id}", response_model=UserOut, dependencies=[Depends(require_roles("admin"))])
 def update_status(user_id: int, payload: UserStatusUpdate, db: Session= Depends(get_db)):
-    updated = user_crud.update_Status(db, user_id, payload.status)
+    updated = user_crud.update_status(db, user_id, payload.status)
     if updated is None:
-        raise HTTPException(status_code=status. HTTP_404_NOT_FOUND, detail="User not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     return to_user_out(updated)
