@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.schemas.machine import MachineIn, MachineOut, MachineSpecs
 from app.crud import machine as machine_crud
 from app.api.deps import require_roles, get_current_user
 from app.models.machine import Machine
+from app.schemas.pagination import PaginatedResponse
 
 router = APIRouter(prefix="/machines", tags=["machines"])
 
@@ -21,9 +22,34 @@ def to_machine_out(m: Machine) -> MachineOut:
     )
 
 
-@router.get("", response_model=list[MachineOut], dependencies=[Depends(get_current_user)])
-def list_machines(db: Session = Depends(get_db)):
-    return [to_machine_out(m) for m in machine_crud.get_all(db)]
+@router.get("", response_model=PaginatedResponse[MachineOut], dependencies=[Depends(get_current_user)])
+def list_machines(
+    page: int = Query(1, ge=1),
+    page_size: int = Query(10, ge=1, le=100, alias="pageSize"),
+    category: str | None = None,
+    status_: str | None = Query(None, alias="status"),
+    search: str | None = None,
+    sort: str | None = None,
+    order: str = Query("asc", pattern="^(asc|desc)$"),
+    db: Session = Depends(get_db),
+):
+    machines, total = machine_crud.get_all_paginated(
+        db,
+        page=page,
+        page_size=page_size,
+        category=category,
+        status=status_,
+        search=search,
+        sort=sort,
+        order=order,
+    )
+    return PaginatedResponse[MachineOut](
+        items=[to_machine_out(m) for m in machines],
+        total=total,
+        page=page,
+        pageSize=page_size,
+        totalPages=max(1, -(-total // page_size)),
+    )
 
 
 @router.get("/{machine_id}", response_model=MachineOut, dependencies=[Depends(get_current_user)])
