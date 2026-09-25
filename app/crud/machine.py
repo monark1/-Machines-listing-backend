@@ -11,7 +11,7 @@ SORTABLE_FIELDS = {
     "status": "status",
 }
 
-SEARCHABLE_COLUMNS = ["name", "category"]
+SEARCHABLE_COLUMNS = ["name", "category", "launch_year", "unit_price", "status"]
 
 
 def get_all_paginated(

@@ -40,6 +40,9 @@ def get_all_paginated(
             SalesRecord.dealer_name.ilike(f"%{search}%"),
             SalesRecord.region.ilike(f"%{search}%"),
             Machine.name.ilike(f"%{search}%"),
+            SalesRecord.revenue.ilike(f"%{search}%"),
+            SalesRecord.sale_date.ilike(f"%{search}%"),
+            SalesRecord.quantity_sold.ilike(f"%{search}%"),
         ))
 
     if sort == "machineName":
